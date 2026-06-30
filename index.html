@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Linea 100</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --azul-profundo: #1a2b4c;
+            --naranja-transicion: #f97316;
+
+            --fondo-principal: #f7fafd;
+            --contenedores: #ffffff;
+            --superficio-secundario: #f1f4f7;
+            --succes: #16a34a;
+            --warning: #facc15;
+            --danger: #dc2626;
+            --texto: #1f2937;
+            --texto-secundario: #6b7280;
+            --border: #f3f4f6;
+            --shadow-sm: 0 4px 10px rgba(0, 0, 0, 0.5);
+            --radius: 16px
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--fondo-principal);
+            color: var(--texto);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--azul-profundo);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--azul-profundo);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--naranja-transicion);
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--texto-secundario);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--naranja-transicion);
+        }
+
+        main.contenedor {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, rgba(26, 43, 76, 0.8), rgba(45, 74, 124, 0.8));
+            background-size: cover;
+            background-position: center;
+            border-radius: 16px;
+            padding: 4rem 2rem;
+            color: white;
+            margin-bottom: 3rem;
+            position: relative;
+            background-image: url(screen.png);
+        }
+
+        .hero .overlay {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero .label {
+            display: inline-block;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--naranja-transicion);
+            padding-bottom: 0.5rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero p {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            max-width: 700px;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background-color: var(--naranja-transicion);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+        }
+
+        .card {
+            background-color: var(--contenedores);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e7eb;
+        }
+        .card-titulo {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--azul-profundo);
+            margin-bottom: 0.5rem;
+        }
+
+        .card-subtitulo {
+            color: var(--texto-secundario);
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        /* ===== TIMELINE DE PARADAS - Línea conectada ===== */
+        .paradas-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .paradas-items {
+            display: flex;
+            gap: 1.5rem;
+            position: relative;
+            align-items: flex-start;
+        }
+
+        /* Línea vertical que conecta las paradas */
+        .paradas-items:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 14px;
+            top: 50px;
+            width: 2px;
+            height: calc(100% + 10px);
+            background: linear-gradient(180deg, var(--naranja-transicion) 0%, #e5e7eb 100%);
+        }
+
+        /* Punto circular de cada parada */
+        .parada-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: white;
+            border: 3px solid var(--naranja-transicion);
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(249, 115, 22, 0.2);
+        }
+
+        /* Punto lleno para origen y destino */
+        .paradas-items.terminal .parada-dot {
+            background-color: var(--naranja-transicion);
+            border-color: var(--azul-profundo);
+        }
+
+        /* Caja de información de cada parada */
+        .parada-body {
+            flex: 1;
+            padding: 1.5rem;
+            background-color: var(--superficio-secundario);
+            border-radius: 12px;
+            border: 1.5px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        .parada-body:hover {
+            border-color: var(--naranja-transicion);
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.1);
+        }
+
+        .parada-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .nombre-parada {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--azul-profundo);
+        }
+
+        /* Etiquetas: Origen, Parada, Destino */
+        .parada-tag {
+            display: inline-block;
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .tag-origen {
+            background-color: var(--naranja-transicion);
+            color: white;
+        }
+
+        .tag-parada {
+            background-color: var(--naranja-transicion);
+            color: white;
+            opacity: 0.8;
+        }
+
+        .tag-destino {
+            background-color: var(--succes);
+            color: white;
+        }
+
+        .parada-desc {
+            color: var(--texto-secundario);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .parada-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--texto-secundario);
+        }
+
+        /* ===== HORARIOS - Grid de 3 columnas ===== */
+        .horario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .horario-card {
+            background-color: var(--superficio-secundario);
+            border-radius: 12px;
+            padding: 1.75rem;
+            border: 1.5px solid #e5e7eb;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .horario-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .horario-card.manana {
+            border-left: 4px solid #fbbf24;
+        }
+
+        .horario-card.tarde {
+            border-left: 4px solid var(--naranja-transicion);
+        }
+
+        .horario-card.noche {
+            border-left: 4px solid var(--azul-profundo);
+        }
+
+        .horario-top {
+            margin-bottom: 1.5rem;
+        }
+
+        .horario-periodo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+        .icono-horario {
+            font-size: 2.5rem;
+        }
+        .nombre-horario {
+            font-weight: 700;
+            color: var(--azul-profundo);
+            font-size: 1.15rem;
+        }
+        .rango-horario {
+            color: var(--texto-secundario);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .frecuencia-badge {
+            display: inline-block;
+            background-color: var(--naranja-transicion);
+            color: white;
+            padding: 0.45rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: 0 2px 8px rgba(249, 115, 22, 0.2);
+        }
+        .horario-detall {
+            color: var(--texto-secundario);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .tabla-especial {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+        .tabla-especial thead {
+            background-color: var(--superficio-secundario);
+        }
+        .tabla-especial th {
+            padding: 1rem 1.25rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--azul-profundo);
+            border-bottom: 2px solid #d1d5db;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .tabla-especial td {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid #e5e7eb;
+            color: var(--texto);
+            font-size: 0.95rem;
+        }
+        .tabla-especial tbody tr:hover {
+            background-color: var(--superficio-secundario);
+        }
+        .estado-god {
+            display: inline-block;
+            padding: 0.45rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .estado-god.activo {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+        .estado-god.limitado {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        .acceso-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .acceso-card {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1.75rem;
+            background-color: var(--superficio-secundario);
+            border-radius: 12px;
+            border: 1.5px solid #e5e7eb;
+            transition: all 0.3s ease;
+            align-items: flex-start;
+        }
+        .acceso-card:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+            border-color: var(--naranja-transicion);
+        }
+        .acceso-icon {
+            font-size: 2.25rem;
+            flex-shrink: 0;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--naranja-transicion);
+            border-radius: 12px;
+            color: white;
+        }
+        .acceso-info h3 {
+            color: var(--azul-profundo);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+        }
+        .acceso-info p {
+            color: var(--texto-secundario);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        .acceso-check {
+            display: inline-block;
+            background-color: var(--succes);
+            color: white;
+            padding: 0.45rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .card h2 {
+            color: var(--azul-profundo);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            font-size: 1.75rem;
+        }
+        .card iframe {
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        footer {
+            background-color: var(--azul-profundo);
+            color: white;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            margin-top: 3rem;
+            font-size: 0.9rem;
+            border-top: 3px solid var(--naranja-transicion);
+        }
+        footer p {
+            opacity: 0.9;
+        }
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 1.5rem;
+                padding: 1rem;
+            }
+            nav {
+                gap: 1rem;
+                width: 100%;
+                justify-content: center;
+            }
+            main.contenedor {
+                padding: 1rem;
+            }
+            .hero {
+                padding: 2.5rem 1.5rem;
+            }
+            .hero h1 {
+                font-size: 2.25rem;
+            }
+            .card {
+                padding: 1.5rem;
+            }
+            .card-titulo {
+                font-size: 1.5rem;
+            }
+            .paradas-items {
+                gap: 1rem;
+            }
+            .parada-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .parada-meta {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            .horario-grid {
+                grid-template-columns: 1fr;
+            }
+            .acceso-grid {
+                grid-template-columns: 1fr;
+            }
+            .tabla-especial {
+                font-size: 0.85rem;
+            }
+            .tabla-especial th,
+            .tabla-especial td {
+                padding: 0.75rem;
+            }
+        }
+        /*Responsibe para movile*/
+        @media (max-width: 480px) {
+            header {
+                padding: 1rem 0.5rem;
+            }
+            .logo {
+                font-size: 1.1rem;
+            }
+            nav {
+                flex-direction: column;
+                gap: 0.5rem;
+                font-size: 0.85rem;
+            }
+            .hero {
+                padding: 2rem 1rem;
+                margin-bottom: 2rem;
+            }
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+            .hero p {
+                font-size: 0.9rem;
+            }
+            .hero-badge {
+                font-size: 0.85rem;
+                padding: 0.6rem 1.2rem;
+            }
+            .card {
+                padding: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            .card-titulo {
+                font-size: 1.25rem;
+            }
+            .card-subtitulo {
+                font-size: 0.85rem;
+            }
+            .nombre-parada {
+                font-size: 0.95rem;
+            }
+            .parada-body {
+                padding: 1rem;
+            }
+            .parada-header {
+                gap: 0.5rem;
+            }
+            .horario-grid {
+                gap: 1rem;
+            }
+            .horario-card {
+                padding: 1.25rem;
+            }
+            .acceso-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.75rem;
+            }
+            .acceso-card {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .tabla-especial {
+                font-size: 0.8rem;
+            }
+            .tabla-especial th,
+            .tabla-especial td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <a href="index.html" class="logo"><span>Linea 100 · UADE</span>
+        </a>
+        <nav>
+            <a href="#inicio">Inicio</a>
+            <a href="#horarios">Horarios</a>
+            <a href="#recorrido">Recorrido</a>
+        </nav>
+    </header>
+    <main class="contenedor">
+        <section class="hero" id="inicio">
+            <div class="overlay">
+                <p class="label">Servicio Universitario</p>
+                <h1>Bienvenidos a la Linea 100</h1>
+                <p>
+                    Conecta el <strong style="color: white">Centro de Transporte Buenos Aires Web</strong> con la
+                    Universidad Argentina de la Empresa, facilitando el traslado diario de estudiantes, docentes y
+                    trabajadores.
+                </p>
+                <p>
+                    Recorre el nucleo de San Nicolas hasta las principales instituciones academicas de CABA.
+                </p>
+                <div class="hero-badge">🚌 4 paradas · 15 min de recorrido</div>
+            </div>
+        </section>
+        <div class="card" id="recorrido">
+            <div class="card-titulo">🗺️ Recorrido y Paradas</div>
+            <div class="card-subtitulo">De Norte a sur - Terminal central hacia UADE
+
+            </div>
+
+            <div class="paradas-timeline">
+
+                <div class="paradas-items terminal">
+                    <div class="parada-dot"></div>
+
+                    <div class="parada-body">
+                        <div class="parada-header">
+                            <span class="nombre-parada">
+                                Centro de Transporte Buenos Aires</span>
+                            <span class="parada-tag tag-origen">Origen</span>
+                        </div>
+                        <p class="parada-desc">Punto de partida principal. Podes consultar informacion, acceder a
+                            servicios y combinar con otras lineas</p>
+
+                        <div class="parada-meta">
+                            <span>📍 San Nicolas, CABA</span>
+                            <span>🔄 Combinaciones disponibles</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="paradas-items">
+
+                    <div class="parada-dot"></div>
+                    <div class="parada-body">
+                        <div class="parada-header">
+                            <span class="nombre-parada">
+                                Av. 9 de Julio</span>
+                            <span class="parada-tag tag-parada">Parada</span>
+                        </div>
+                        <p class="parada-desc">Parada estrategica con conexion a multiples medios de transporte y acceso
+                            al centro de la cuidad.</p>
+                        <div class="parada-meta">
+                            <span>⏱ +4 minutos desde origen</span>
+                            <span>🚇 Conexion subte B</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="paradas-items">
+
+                    <div class="parada-dot"></div>
+
+                    <div class="parada-body">
+                        <div class="parada-header">
+                            <span class="nombre-parada">Av. Belgrano y Lima</span>
+                            <span class="parada-tag tag-parada">Parada</span>
+                        </div>
+                        <p class="parada-desc">Zona de conexion con areas comerciales y educativas, muy utilizada por
+                            estudiantes y trabajadores.</p>
+
+                        <div class="parada-meta">
+                            <span>⏱ +9 min desde origen</span>
+                            <span>🏫 Zona universitaria</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="paradas-items terminal">
+
+                    <div class="parada-dot"></div>
+
+                    <div class="parada-body">
+                        <div class="parada-header">
+                            <span class="nombre-parada">UADE - Universidad Argentina de la Empresa</span>
+                            <span class="parada-tag tag-destino">Destino</span>
+                        </div>
+                        <p class="parada-desc">Destino principal de la Linea 100, con acceso directo al campus
+                            universitario.</p>
+
+                        <div class="parada-meta">
+                            <span>⏱ 15 minutos desde el origen</span>
+                            <span>🎓 Campus Principal</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Horarios del la linea 100-->
+        <div class="card" id="horarios">
+            <div class="card-titulo">🕐 Horarios de servicio</div>
+            <div class="card-subtitulo">Frecuencia segun el momento del dia - dias habiles</div>
+            <div class="horario-grid">
+                <div class="horario-card manana">
+
+                    <div class="horario-top">
+                        <div class="horario-periodo">
+                            <span class="icono-horario">🌅</span>
+                            <div>
+                                <div class="nombre-horario">Mañana</div>
+                                <div class="rango-horario">06:00 - 09:00</div>
+                            </div>
+                        </div>
+                        <span class="frecuencia-badge">Cada 10 minutos</span>
+                    </div>
+                    <p class="horario-detall">Alta frecuencia para cubrir el ingreso de estudiantes y trabajadores.
+                        Mayor demanda del dia.</p>
+                </div>
+
+                <div class="horario-card tarde">
+
+                    <div class="horario-top">
+
+                        <div class="horario-periodo">
+                            <span class="icono-horario">☀️</span>
+
+                            <div>
+                                <div class="nombre-horario">Turno Tarde</div>
+                                <div class="rango-horario">09:00 - 17:00</div>
+                            </div>
+                        </div>
+                        <span class="frecuencia-badge">Frecuencia moderada.</span>
+                    </div>
+                    <p class="horario-detall"> Adecuada para clases turno tarde y translados intermedios.</p>
+                </div>
+
+
+
+                <div class="horario-card noche">
+                    <div class="horario-top">
+                        <div class="horario-periodo">
+                            <span class="icono-horario">🌙</span>
+                            <div>
+                                <div class="nombre-horario">Turno Noche</div>
+                                <div class="rango-horario">17:00 - 21:00</div>
+                            </div>
+                        </div>
+                        <span class="frecuencia-badge">Cada 12 minutos</span>
+                    </div>
+                    <p class="horario-detall">Refuerzo en hora pico de regreso, Cubre la salida de cursadas nocturnas en
+                        UADE.</p>
+                </div>
+            </div>
+
+            <div style="margin-top:8px">
+                <p style="font-size:0.82rem;font-weight:700;color:var(--azul-profundo);margin-bottom:12px;">Horarios
+                    especiales</p>
+                <table class="tabla-especial">
+                    <thead>
+                        <tr>
+                            <th>Dia</th>
+                            <th>Horario</th>
+                            <th>Frecuencia</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Sabado</td>
+                            <td>07:00 - 20:00</td>
+                            <td>Cada 25 min</td>
+                            <td><span class="estado-god activo">Activo</span></td>
+                        </tr>
+                        <tr>
+                            <td>Domingo</td>
+                            <td>08:00 - 18:00</td>
+                            <td>Cada 40 min</td>
+                            <td><span class="estado-god limitado">Limitado</span></td>
+                        </tr>
+                        <tr>
+                            <td>Feriados</td>
+                            <td>08:00 - 17:00</td>
+                            <td>Cada 30 min</td>
+                            <td><span class="estado-god limitado">Limitado</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!---Accesos-->
+        <div class="card">
+            <div class="card-titulo">♿ Accesibilidad</div>
+            <div class="card-subtitulo">Todas las unidades y paradas cumplen estándares de accesibilidad universal</div>
+
+            <div class="acceso-grid">
+
+                <div class="acceso-card">
+                    <div class="acceso-icon">♿</div>
+                    <div class="acceso-info">
+                        <h3>Rampas de acceso</h3>
+                        <p>Todas las terminales y unidades cuentan con rampas adaptadas para personas con movilidad
+                            reducida.</p>
+                        <div class="acceso-check">Disponible en todas las paradas</div>
+                    </div>
+                </div>
+
+                <div class="acceso-card">
+                    <div class="acceso-icon">🪧</div>
+                    <div class="acceso-info">
+                        <h3>Señalización clara</h3>
+                        <p>Carteles de alto contraste, indicaciones en Braille y pictogramas en todas las estaciones y
+                            unidades.</p>
+                        <div class="acceso-check">Sistema visual y táctil</div>
+                    </div>
+                </div>
+
+                <div class="acceso-card">
+                    <div class="acceso-icon">🚌</div>
+                    <div class="acceso-info">
+                        <h3>Espacios reservados</h3>
+                        <p>Sectores exclusivos para usuarios en silla de ruedas, personas mayores y acompañantes en cada
+                            unidad.</p>
+                        <div class="acceso-check">2 espacios por unidad</div>
+                    </div>
+                </div>
+
+                <div class="acceso-card">
+                    <div class="acceso-icon">🔊</div>
+                    <div class="acceso-info">
+                        <h3>Audio y anuncios</h3>
+                        <p>Sistema de anuncios en audio de próximas paradas para personas con discapacidad visual.</p>
+                        <div class="acceso-check">Todas las unidades</div>
+                    </div>
+                </div>
+
+                <div class="acceso-card">
+                    <div class="acceso-icon">💳</div>
+                    <div class="acceso-info">
+                        <h3>Tarifa social</h3>
+                        <p>Descuento especial para personas con discapacidad, estudiantes y jubilados con credencial
+                            vigente.</p>
+                        <div class="acceso-check">Hasta 75% de descuento</div>
+                    </div>
+                </div>
+
+                <div class="acceso-card">
+                    <div class="acceso-icon">🛗</div>
+                    <div class="acceso-info">
+                        <h3>Ascensores</h3>
+                        <p>Ascensores en todas las estaciones de parada con pantallas de acceso y botones en relieve.
+                        </p>
+                        <div class="acceso-check">Operativos 24hs</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!----Mapa del recorrido-->
+        <div class="card">
+            <h2>Mapa del Recorrido</h2>
+            <iframe src="https://www.google.com/maps/d/embed?mid=1_EZ_viJmjySolYyYxPgsehN8q2Q9a6A&ehbc=2E312F" width="640" height="480">
+                height="400"
+                style="border:0; border-radius:16px;"
+                allowfullscreen
+                loading="lazy">
+            </iframe>
+        </div>
+    </main>
+    <footer>
+        <p> @ 2026 Centro de Transporte Buenos Aires Web - Linea 100 - UADE</p>
+    </footer>
+</body>
+
+</html>
